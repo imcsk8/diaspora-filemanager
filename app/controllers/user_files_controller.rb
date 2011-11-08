@@ -124,8 +124,11 @@ class UserFilesController < ApplicationController
       rescue Exception => e
         raise e
       end
-
-      if @file.save
+RAILS_DEFAULT_LOGGER.debug "ANTES DE SAVE"
+      file_id = @file.save
+RAILS_DEFAULT_LOGGER.debug "DESPUES DE SAVE: #{file_id}"
+      #if @file.save
+      if file_id
         aspects = current_user.aspects_from_ids(params[:aspect_ids])
         unless @file.pending
           current_user.add_to_streams(@file, aspects)
