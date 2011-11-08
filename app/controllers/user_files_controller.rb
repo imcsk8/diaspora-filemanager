@@ -13,6 +13,7 @@ class UserFilesController < ApplicationController
 
       RAILS_DEFAULT_LOGGER.debug "DEBUG:: INDEX DE FILES"
     @post_type = :files
+      RAILS_DEFAULT_LOGGER.debug "DEBUG:: POST TYPE: #{@post_type} DE FILES"
     @person = Person.find_by_id(params[:person_id])
     @currdir = "/"
     #aspects = current_user.aspects_from_ids(params[:aspect_ids])

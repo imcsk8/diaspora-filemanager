@@ -44,7 +44,7 @@ es:
   all_aspects: "Todos los aspectos"
   application: 
     helper: 
-      diaspora_alpha: "DIASPORA* ALPHA"
+      diaspora_alpha: "Comunidad * Beta"
       unknown_person: "persona desconocida"
       video_title: 
         unknown: "Título de vídeo desconocido"

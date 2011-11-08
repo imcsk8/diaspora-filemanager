@@ -204,5 +204,5 @@ Diaspora::Application.routes.draw do
   get 'logged_out' => 'users#logged_out', :as => 'logged_out'
 
   # Startpage
-  root :to => 'home#show'
+  root :to => redirect('/users/sign_in')
 end
