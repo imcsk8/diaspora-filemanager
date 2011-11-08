@@ -13,6 +13,7 @@ en:
   _services: "Services"
   _applications: "Applications"
   _photos: "photos"
+  _files: "files"
   ok: "OK"
   cancel: "Cancel"
   delete: "Delete"
@@ -601,7 +602,7 @@ en:
       empty: "{file} is empty, please select files again without it."
     new_profile_photo:
       upload: "Upload a new profile photo!"
-      or_select_one_existing: "or select one from your already existing %{photos}"
+      or_select_one_existing: "or select one from your already existing: "
     comment_email_subject: "%{name}'s photo"
 
   posts:
@@ -746,6 +747,17 @@ en:
         few: "In %{count} aspects"
         many: "In %{count} aspects"
         other: "In %{count} aspects"
+    user_files:
+      index:
+        new_directory: "New Folder"
+        top_directory: "Top"
+        create_dir_error: "This folder already exists"
+        upload_file: "Upload File"
+        download: "Download"
+        delete: "Delete"
+        link_facebook: "Compartir en facebook"
+        link_twitter: "Compartir en twitter"
+        new_file: "Upload"
     publisher:
       posting: "Posting..."
       share: "Share"

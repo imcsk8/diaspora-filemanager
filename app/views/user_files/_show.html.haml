@@ -1,0 +1,64 @@
+-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+- content_for :head do
+  = include_javascripts :files
+
+%strong{:class => "code", :id => "message"} Hello, World!
+
+.span-16.append-4.prepend-4.last
+  #file_controls
+    -if additional_files && additional_files.length > 1
+      .right
+        =link_to "← #{t('previous')}", previous_file, :rel => 'prefetch', :id => 'file_show_left'
+        \/
+        =link_to "#{t('next')} →", next_file, :rel => 'prefetch',  :id => 'file_show_right'
+
+  #original_post_info
+    = render 'shared/author_info', :person => file.author, :post => file
+
+  #file_container
+    #show_file{:data=>{:guid=>file.id}}
+      -if ownership
+        = file_tag 'ajax-loader.gif', :id => "file_spinner", :class => "hidden"
+        = file_tag file.url()
+      -else
+        = file_tag file.url()
+
+      #caption
+        = file.text
+
+    - if ownership
+      .file_options{:data=>{:actor=>"#{file.author.owner.id}", :actor_person => "#{file.author.id}", :file_url => "#{file.url()}"}}
+        |
+        = link_to t('.edit'), '#', :id => "edit_file_toggle"
+      %br
+
+  %hr
+
+  - if file.status_message
+
+    .span-8.last
+      %p
+        = markdownify(file.status_message)
+      %span{:style=>'font-size:smaller'}
+        =link_to t('.collection_permalink'), post_path(file.status_message)
+      %br
+      %br
+
+    .span-7.prepend-1
+      .show_file_attachments
+        - for _file in additional_files
+          = link_to (file_tag _file.url(:thumb_small), :class => 'thumb_small'), file_path(_file)
+
+
+  #file_edit_options
+    %h4= t('.edit_delete_file')
+    - if file.status_message
+      %p
+        = form_for file, :remote => true do |p|
+          = p.text_field :text, :value => file.text
+          = p.submit t('.update_file')
+    %p
+      = button_to t('.delete_file'), file, :confirm => t('are_you_sure'), :method => :delete

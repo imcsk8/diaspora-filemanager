@@ -67,6 +67,13 @@ javascripts:
     - public/javascripts/aspect-edit-pane.js
   photos:
     - public/javascripts/photo-show.js
+  user_files:
+    - public/javascripts/file-show.js
+    - public/javascripts/widgets/jquery.jeditable.js
+    - public/javascripts/widgets/jqModal.js
+    - public/javascripts/widgets/jqueryFileTree/jqueryFileTree.js
+    - public/javascripts/widgets/jqwidgets/jqxcore.js
+    - public/javascripts/widgets/jqwidgets/jqxmenu.js
   inbox:
     - public/javascripts/vendor/jquery.autoSuggest.custom.js
     - public/javascripts/inbox.js
@@ -90,4 +97,7 @@ stylesheets:
 
   mobile:
     - public/stylesheets/mobile.css
-
+  user_files:
+    - public/stylesheets/user_files.css
+    - public/stylesheets/jqx.base.css
+    - public/stylesheets/jqueryFileTree.css

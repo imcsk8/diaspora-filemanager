@@ -33,6 +33,10 @@ Diaspora::Application.routes.draw do
     put :make_profile_photo
   end
 
+  resources :user_files
+  get 'user_files/dir/:name' => 'user_files#get_dir'
+  post 'user_files/new' => 'user_files#new_file'
+ 
   # ActivityStreams routes
   scope "/activity_streams", :module => "activity_streams", :as => "activity_streams" do
     resources :photos, :controller => "photos", :only => [:create]
@@ -123,6 +127,12 @@ Diaspora::Application.routes.draw do
   resources :people, :except => [:edit, :update] do
     resources :status_messages
     resources :photos
+    resources :user_files
+    get 'filemanager' => 'user_files#filemanager'
+    post 'filemanager' => 'user_files#filemanager'
+    match 'user_files/showdir/*name' => 'user_files#get_dir'
+    get 'user_files/dir/new' => 'user_files#create_dir'
+    post 'user_files/dir/new' => 'user_files#create_dir'
     get  :contacts
     get "aspect_membership_button" => :aspect_membership_dropdown, :as => "aspect_membership_button"
     collection do

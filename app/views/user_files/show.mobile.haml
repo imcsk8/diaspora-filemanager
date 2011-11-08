@@ -1,0 +1,17 @@
+-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+
+#show_content.file
+  = file_tag file.url()
+
+  -if additional_files && additional_files.length > 1
+    #file_controls
+    %table
+      %tr
+        %td
+          =link_to "←", previous_file, :rel => 'prefetch', :class => 'arrow'
+        %td{:width => '100%'}
+        %td
+          =link_to "→", next_file, :rel => 'prefetch', :class => 'arrow'

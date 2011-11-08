@@ -1,0 +1,32 @@
+-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+
+
+- classes = "directory collapsed"
+%ul.jqueryFileTree{ :style => "display: none;"}
+  -# if @currdir == '/'
+    %li{ :class => classes, :id => "root_dir_li"}
+      %a{ :rel => "/", :id => "root_dir_a", :href => "#"}= @currdir
+  - if @files
+    - for file in @files
+      - if file.unixperms =~ /^d/
+        - dirpath = "#{@file_path}#{file.filename()}/"
+        - classes = "directory collapsed"
+        - id_elem = "#{dirpath}"
+        - id_elem.slice!(0)
+        - id_elem.slice!(id_elem.length - 1)
+        - id_elem = id_elem.gsub("\/", "_");
+        - dir_link = link_to file.filename(), "#", :rel => dirpath, :file_id => "#{file.id()}", :id => "#{id_elem}_a", :class => "dir jqxWidget"
+        %li{ :class => classes, :id => "#{id_elem}"}= dir_link
+      - else
+        - myfilename = file.filename()
+        - myfilename =~ /.*\.(.+)$/
+        - ext = $1
+        - classes = "file ext_#{ext}"
+        - file_link = link_to myfilename, "#", :rel => "#{file.id()}", :file_id => "#{file.id()}", :class => "jqxWidget"
+        -# test = "#{file_link} TES"
+        %li{:class => classes, :id=> "#{@file_path}#{file.id()}"}= file_link
+
+

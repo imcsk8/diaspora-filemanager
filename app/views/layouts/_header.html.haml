@@ -32,6 +32,14 @@
           .badge_count{:class => ("hidden" if @notification_count == 0)}
             = @notification_count
 
+      #photos_badge.badge
+        = link_to person_photos_path(current_user.person) , :title => t('_photos') do
+          = image_tag 'icons/photo_menu.svg', :width => 18
+     
+      #files_badge.badge
+        = link_to person_user_files_path(current_user.person) , :title => t('_files') do
+          = image_tag 'icons/folder.svg', :width => 18
+
       #message_inbox_badge.badge
         = link_to conversations_path, :title => new_message_text(@unread_message_count) do
           = image_tag 'icons/mail_grey.svg', :width => 18, :alt => new_message_text(@unread_message_count)

@@ -9,6 +9,7 @@ es:
   _contacts: "Contactos"
   _home: "Inicio"
   _photos: "Fotos"
+  _files: "Archivos"
   _services: "Servicios"
   account: "Cuenta"
   activerecord: 
@@ -555,7 +556,7 @@ es:
       invalid_ext: "{file} tiene una extensión inválida. Sólo {extensions} están permitidas."
       size_error: "{file} es demasiado largo, el tamaño máximo por archivo es de {sizeLimit}."
     new_profile_photo: 
-      or_select_one_existing: "o selecciona alguna de las %{photos} ya existentes"
+      or_select_one_existing: "o selecciona alguna de las ya existentes: "
       upload: "¡Sube una foto nueva de perfil!"
     photo: 
       view_all: "ver todas las fotos de %{name}"
@@ -740,6 +741,7 @@ es:
       share: "Comparte"
       title: "Configurar los servicios conectados"
       visibility_dropdown: "Usa este menú desplegable para cambiar la visibilidad de tu publicación. (Sugerimos hacerlo público la primera vez.)"
+
     publisher: 
       all: "todo"
       all_contacts: "todos los contactos"
@@ -924,3 +926,14 @@ es:
     not_enabled: "El webfinger parece no estar habilitado para el host de %{account}"
     xrd_fetch_failed: "Hubo un error al recibir el xrd desde la cuenta %{account}"
   welcome: ¡Bienvenid@!
+  user_files:
+    index:
+      new_directory: "Nueva Carpeta"
+      top_directory: "Inicio"
+      create_dir_error: "Este directorio ya existe"
+      upload_file: "Cargar Archivo"
+      download: "Descargar"
+      delete: "Eliminar"
+      link_facebook: "Compartir en facebook"
+      link_twitter: "Compartir en twitter"
+      new_file: "Cargar"
