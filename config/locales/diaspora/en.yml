@@ -758,6 +758,7 @@ en:
         link_facebook: "Compartir en facebook"
         link_twitter: "Compartir en twitter"
         new_file: "Upload"
+      destroy_notice: "File Deleted"
     publisher:
       posting: "Posting..."
       share: "Share"

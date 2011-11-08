@@ -937,3 +937,4 @@ es:
       link_facebook: "Compartir en facebook"
       link_twitter: "Compartir en twitter"
       new_file: "Cargar"
+    destroy_notice: "Archivo Eliminado"
