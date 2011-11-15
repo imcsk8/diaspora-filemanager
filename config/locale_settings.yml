@@ -1,4 +1,4 @@
-default: "en"
+default: "es-UACH"
 available:
   ar: "العربية"
   bg: "български език"
@@ -16,6 +16,7 @@ available:
   en_shaw: "𐑦𐑙𐑤𐑦𐑖"
   eo: "Esperanto"
   es: "Español"
+  es-UACH: "Españlo Comunidad"
   es-AR: "Castellano"
   es-CL: "Español Chileno"
   eu: "Euskara"

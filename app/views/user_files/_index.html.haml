@@ -18,7 +18,7 @@
         }, function(file) {
           //window.location.href = '/user_files/' + file;
           currfile_id = file
-          $('#del_button').attr('href', '/people/#{current_user.id()}/user_files/' + currfile_id);
+          $('#del_button').attr('href', '/people/#{current_user.person.id()}/user_files/' + currfile_id);
         });
 
     $('#dialog').jqm();
@@ -45,18 +45,18 @@
 
   function prepareMenu() {
      // Create a jqxMenu
-    $('#jqxMenu').jqxMenu({ width: 250, height: 30 });
+    /*    $('#jqxMenu').jqxMenu({ width: 250, height: 30 });
     $('#jqxMenu').css('visibility', 'hidden');
-    $('#jqxMenu').css('display', 'none');
+    $('#jqxMenu').css('display', 'none'); */
 
-    var contextMenu = $("#jqxMenu").jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup'});
+    var contextMenu = $("#jqxMenu").jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup', autoCloseInterval: 10000000});
 
     $(".jqxWidget").bind('mousedown', function (event) {
       var rightClick = isRightClick(event);
       currfile_id = $(this).attr('file_id');
       isDir = $(this).hasClass('dir'); 
       if (rightClick) {
-        $('#del_button').attr('href', '/people/#{current_user.id()}/user_files/' + currfile_id);
+        $('#del_button').attr('href', '/people/#{current_user.person.id()}/user_files/' + currfile_id);
         var scrollTop = $(window).scrollTop();
         var scrollLeft = $(window).scrollLeft();
         contextMenu.jqxMenu('open', parseInt(event.clientX) + 5 + scrollLeft, parseInt(event.clientY) + 5 + scrollTop);
@@ -196,34 +196,6 @@
 %br
 #content
   =image_tag('/images/ajax-loader2.gif');
--#%ul#root_ul
-  %li{ :class => 'directory expanded', :id => "root_dir_li"}
-    %a{ :rel => "/", :id => "root_dir_a", :href => "#"} /
-  %ul#files
-    - @currdir =~ /(.+)(\/.+$)/
-    - updir = $1
-    - if updir != ""
-      =link_to "..", "/people/#{current_user.id()}/user_files/showdir#{updir}"
-    - else
-      =link_to "..", "/people/#{current_user.id()}/user_files/"
-    - if files
-      - for file in files
-        - del_link = link_to "DEL", "/people/#{current_user.id()}/user_files/#{file.id}", :method => :delete
-        - if file.unixperms =~ /^d/
-          - dir_link = link_to file.filename(), "/people/#{current_user.id()}/user_files/showdir#{@currdir}/#{file.filename()}" 
-          %li.directory= dir_link + " :: " + del_link
-        - else
-          - file_link = link_to file.filename(), user_file_path(file)
-          %li.file= file_link + " :: " + del_link
-
-
--#.jqmWindow#dialog
-
-  %a.jqmClose Close
-  %br
-  %a{:onclick => 'window.location.href="/user_files/" + currfile_id'}= t('.download');
-  %br
-  =link_to  t('.delete'),  "/people/#{current_user.id()}/user_files/", :method => 'delete', :id => 'del_button'
 
 
 #jqxMenu
@@ -231,7 +203,7 @@
     %li 
       %a{:onclick => 'window.location.href="/user_files/" + currfile_id'}= t('.download');
       %a{:onclick => 'showPostDialog()'}= t('.share');
-    %li=link_to t('.delete'),  "/people/#{current_user.id()}/user_files/", :method => 'delete', :id => 'del_button'
+    %li=link_to t('.delete'),  "/people/#{current_user.person.id()}/user_files/", :method => 'delete', :id => 'del_button'
 
 
 

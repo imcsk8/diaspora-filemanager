@@ -221,7 +221,7 @@ class UserFilesController < ApplicationController
     begin
       create_object
     rescue Exception => e
-    RAILS_DEFAULT_LOGGER.debug "DEBUG: ERROR CREATEDIR CACHADO"
+    RAILS_DEFAULT_LOGGER.debug "DEBUG: ERROR CREATEDIR CACHADO #{e.message}"
       message = I18n.t 'user_files.index.create_dir_error'
       flash[:error] = message
       respond_to do |format|
