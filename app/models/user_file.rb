@@ -15,7 +15,7 @@ class UserFile < Post
   belongs_to :status_message, :foreign_key => :status_message_guid, :primary_key => :guid
 
   attr_accessible :text, :pending, :filename, :path, :unixperms
-  #validate :ownership_of_status_message
+  validate :ownership_of_status_message
 
   #before_destroy :ensure_user_file
   after_destroy :clear_empty_status_message, :delete_file
@@ -23,10 +23,13 @@ class UserFile < Post
 
   def delete_file
     filepath = "#{Rails.root}/public/uploads/files/#{self.path}/#{self.filename}"
+    RAILS_DEFAULT_LOGGER.debug "DEBUG :: EN DELETE #{filepath}  :: #{self.unixperms}"
     if self.unixperms =~ /^d/
+      RAILS_DEFAULT_LOGGER.debug "DEBUG :: DIRECTORIO #{filepath} :: #{self.unixperms}"
       begin
         Dir.rmdir(filepath)
       rescue Exception => e
+      RAILS_DEFAULT_LOGGER.debug "DEBUG :: DIRECTORIO con contenido"
         raise e
       end
       return 
@@ -55,9 +58,16 @@ class UserFile < Post
     file = super(params)
     file_param = params.delete(:file)
     file_object = FileObject.new
+     RAILS_DEFAULT_LOGGER.debug "EN MODEL FILE OBJECT: #{file_object}"
+     RAILS_DEFAULT_LOGGER.debug "EN MODEL USERNAME: #{params[:username]}"
     @username = params[:username]
+     RAILS_DEFAULT_LOGGER.debug "EN MODEL USERNAME: #{ @username}"
     file.random_string = ActiveSupport::SecureRandom.hex(10)
     if params[:unixperms] !~ /^d/
+      RAILS_DEFAULT_LOGGER.debug "DEBUG :: ES ARCHIVO "
+     RAILS_DEFAULT_LOGGER.debug "EN MODEL FILENAME OBJ: #{file_param}"
+     RAILS_DEFAULT_LOGGER.debug "EN MODEL FILENAME OBJ: #{file_param.original_filename}"
+     RAILS_DEFAULT_LOGGER.debug "EN MODEL FILENAME ATTR: #{file.filename}"
       file.filename = file_param.original_filename
       file.file_object.user_path = params[:user_path]
       file.file_object.unixperms = params[:unixperms]
@@ -65,10 +75,11 @@ class UserFile < Post
       file.update_remote_path
     else
       newdir = "#{Rails.root}/public/uploads/files/#{params[:user_path]}/#{params[:filename]}"
+      RAILS_DEFAULT_LOGGER.debug "DEBUG :: ES DIRECTORIO #{newdir}"
       begin 
         Dir.mkdir(newdir, 0755)
       rescue Exception => e
-        Rails.logger.debug "DEBUG ERROR CREATING DIR: #{e.message}"
+        RAILS_DEFAULT_LOGGER.debug "DEBUG ERROR CREANDO DIR: #{e.message}"
         raise e
       end
     end

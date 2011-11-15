@@ -118,14 +118,14 @@
       function(data) {
         if(data.status == 200){
           aux = $('#currdir').val();
-          if(aux != '/'){
+          if( (aux != '/') && (aux != '') ){
             aux = stripSlashes(aux);
             currdir_id = aux.replace(/\//g, "_");
             $('#' + currdir_id + '_a').trigger('click');//hide
             $('#' + currdir_id + '_a').trigger('click');//show
           }
           else {
-            window.location.href = '/people/#{current_user.id()}/user_files/'
+            window.location.href = '/people/#{current_user.person.id()}/user_files/';
           }
         }
         else {

@@ -1,0 +1,197 @@
+package configuration for libffi
+cflags: -I/usr/lib64/libffi-3.0.9/include  
+ldflags: 
+libs: -lffi  
+
+have_library: checking for ffi_call() in -lffi... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined      -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static  -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main() {return 0;}
+/* end */
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined      -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <ffi.h>
+4: 
+5: /*top*/
+6: int main() {return 0;}
+7: int t() { void ((*volatile p)()); p = (void ((*)()))ffi_call; return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for ffi_prep_closure()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:5: error: 'ffi_prep_closure' undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))ffi_prep_closure; return 0; }
+/* end */
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { ffi_prep_closure(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for ffi_raw_call()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:5: error: 'ffi_raw_call' undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))ffi_raw_call; return 0; }
+/* end */
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { ffi_raw_call(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for ffi_prep_raw_closure()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:5: error: 'ffi_prep_raw_closure' undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))ffi_prep_raw_closure; return 0; }
+/* end */
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { ffi_prep_raw_closure(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_thread_blocking_region()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))rb_thread_blocking_region; return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for ruby_thread_has_gvl_p()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:5: error: 'ruby_thread_has_gvl_p' undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))ruby_thread_has_gvl_p; return 0; }
+/* end */
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { ruby_thread_has_gvl_p(); return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for ruby_native_thread_p()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))ruby_native_thread_p; return 0; }
+/* end */
+
+--------------------
+
+have_func: checking for rb_thread_call_with_gvl()... -------------------- yes
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+conftest.c: In function 't':
+conftest.c:5: error: 'rb_thread_call_with_gvl' undeclared (first use in this function)
+conftest.c:5: error: (Each undeclared identifier is reported only once
+conftest.c:5: error: for each function it appears in.)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { void ((*volatile p)()); p = (void ((*)()))rb_thread_call_with_gvl; return 0; }
+/* end */
+
+"x86_64-pc-linux-gnu-gcc -o conftest -I/usr/include/ruby-1.9.1/x86_64-linux -I/usr/include/ruby-1.9.1/ruby/backward -I/usr/include/ruby-1.9.1 -I.    -march=native -mtune=generic -O2 -pipe -fno-strict-aliasing -fPIC -I/usr/lib64/libffi-3.0.9/include   conftest.c  -L. -L/usr/lib64 -Wl,-R/usr/lib64 -L. -Wl,-O1 -Wl,--as-needed -rdynamic -Wl,-export-dynamic -Wl,--no-undefined     -lffi  -lffi   -Wl,-R -Wl,/usr/lib64 -L/usr/lib64 -lruby19-static -lffi  -lffi   -lpthread -lrt -ldl -lcrypt -lm   -lc"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: /*top*/
+4: int main() {return 0;}
+5: int t() { rb_thread_call_with_gvl(); return 0; }
+/* end */
+
+--------------------
+

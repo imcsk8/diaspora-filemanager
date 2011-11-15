@@ -1,0 +1,239 @@
+-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+= include_stylesheets :user_files, :media => 'all'
+= include_javascripts :user_files
+
+- curr_dir_id = @currdir
+- curr_dir_id.slice!(0)
+
+:javascript
+  var currfile_id = 0;
+  $(document).bind("ready", function(){ 
+    $('#content').fileTree({
+        root: '/' ,
+        multiFolder: false,
+        script: '/people/' +  #{@person.id.to_s()} + '/filemanager'
+        }, function(file) {
+          //window.location.href = '/user_files/' + file;
+          currfile_id = file
+          $('#del_button').attr('href', '/people/#{current_user.id()}/user_files/' + currfile_id);
+        });
+
+    $('#dialog').jqm();
+    $('#postdialog').jqm();
+
+    setTimeout('getDir("#{@currdir}", null); prepareMenu()', 3000);
+
+    $('.createdir').editable(function(value, settings){
+      createDir(value); 
+      return value;
+    },
+    { 
+      width   : 150,
+      type    : 'text',
+      submit  : 'OK', 
+      cancel  : 'Cancel',
+      indicator : 'Saving...',
+     });
+
+
+
+  });
+
+
+  function prepareMenu() {
+     // Create a jqxMenu
+    $('#jqxMenu').jqxMenu({ width: 250, height: 30 });
+    $('#jqxMenu').css('visibility', 'hidden');
+    $('#jqxMenu').css('display', 'none');
+
+    var contextMenu = $("#jqxMenu").jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup'});
+
+    $(".jqxWidget").bind('mousedown', function (event) {
+      var rightClick = isRightClick(event);
+      currfile_id = $(this).attr('file_id');
+      isDir = $(this).hasClass('dir'); 
+      if (rightClick) {
+        $('#del_button').attr('href', '/people/#{current_user.id()}/user_files/' + currfile_id);
+        var scrollTop = $(window).scrollTop();
+        var scrollLeft = $(window).scrollLeft();
+        contextMenu.jqxMenu('open', parseInt(event.clientX) + 5 + scrollLeft, parseInt(event.clientY) + 5 + scrollTop);
+        return false;
+      }
+      if(!isDir) {
+        window.location.href="/user_files/" + currfile_id
+      }
+
+    });
+    // disable the default browser's context menu.
+    $(document).bind('contextmenu', function (e) {
+      return false;
+    }); 
+
+    function isRightClick(event) {
+      var rightclick;
+      if (!event) var event = window.event;
+        if (event.which) rightclick = (event.which == 3);
+        else
+          if (event.button) rightclick = (event.button == 2);
+            return rightclick;
+    }
+  }
+
+
+  function getDir(dir1, dir2){
+    dir1 = stripSlashes(dir1);
+    var dirpath = dir1.split('/');
+    curr = dirpath.shift();
+    if(dir2 != null)
+      curr = dir2 + "/" + curr;
+    nextdir = dirpath.join('/');
+    curr_id = curr.replace(/\//g, "_");
+    $('#' + curr_id + '_a').trigger('click');
+    if(dirpath.length >= 0){
+      setTimeout('getDir(nextdir, curr); prepareMenu()', 3000);
+    }
+  }
+
+
+  function stripSlashes(str){
+    var patt = /^\//g;
+    var aux = str
+    if(patt.test(str))
+      aux = str.substring(1);
+    patt = /\/$/g;
+    if(patt.test(str))
+      aux = aux.substring(0, aux.length - 1);
+    return aux
+  }
+  
+  function createDir(data){
+    postdata = {
+      user_file: data,
+      currdir: $('#currdir').val()
+    };
+    $.post('/people/' +  #{@person.id.to_s()} + '/user_files/dir/new',postdata ,
+      function(data) {
+        if(data.status == 200){
+          aux = $('#currdir').val();
+          if(aux != '/'){
+            aux = stripSlashes(aux);
+            currdir_id = aux.replace(/\//g, "_");
+            $('#' + currdir_id + '_a').trigger('click');//hide
+            $('#' + currdir_id + '_a').trigger('click');//show
+          }
+          else {
+            window.location.href = '/people/#{current_user.id()}/user_files/'
+          }
+        }
+        else {
+          alert('#{t('.create_dir_error')}');
+        }
+      }, 
+      'json'
+    );
+  }
+
+  function showPostDialog(){
+    $('#postdialog').jqmShow();
+  }
+
+.jqmWindow#dialog
+  #file_upload
+    = form_tag person_user_files_path , :method => :post, :multipart => true, :id => 'upload_file_form'
+    = file_field_tag 'file'
+    %input{:type => "hidden", :name => "aspect_ids[]", :class => "selected_contacts_link", :value => "all"}
+    %input{:type => "hidden", :id => "currdir", :name => "currdir", :class => "selected_contacts_link", :value => "#{@currdir}"}
+    %input{:type => "hidden", :id => "currdir_fm", :name => "currdir_fm", :class => "selected_contacts_link", :value => "#{@currdir}"}
+    %br
+    .submit_block
+      = link_to t('cancel'), person_path(current_user.person), :class => "button jqmClose"
+      = submit_tag t('.upload_file'), :class => "creation"
+
+#toolbar
+  %p#currdir_label= @currdir
+  .controls
+    .new_file.control
+      = link_to t('.new_file'), '#', :class => 'button'
+    .new_dir.control
+      = link_to t('.new_directory'), '#', :class => 'button'
+    .top.control
+      = link_to t('.top_directory'), '#', :class => 'button'
+
+  .edit_area_container
+    .createdir=t('.new_directory')
+
+:javascript
+  $('.new_file').click(function(){
+          $('#dialog').jqmShow();
+  });
+
+  $('.new_dir').click(function(){
+    $('.edit_area_container').show();
+    $('.createdir').click();
+
+  });
+
+  $('.edit_area_container').blur(function(){
+    $('.edit_area_container').hide();
+    $('.createdir').hide();
+
+  });
+
+
+
+
+  $('.top').click(function(){
+    mycurrdir = stripSlashes( $('#currdir').val() );
+    mycurrdir = mycurrdir.replace(/\//g, "_");
+    $('#' + mycurrdir + "_a").trigger('click');
+    $('#currdir').val('/');
+    $('#currdir_label').text('/');
+  });
+
+%br
+#content
+  =image_tag('/images/ajax-loader2.gif');
+-#%ul#root_ul
+  %li{ :class => 'directory expanded', :id => "root_dir_li"}
+    %a{ :rel => "/", :id => "root_dir_a", :href => "#"} /
+  %ul#files
+    - @currdir =~ /(.+)(\/.+$)/
+    - updir = $1
+    - if updir != ""
+      =link_to "..", "/people/#{current_user.id()}/user_files/showdir#{updir}"
+    - else
+      =link_to "..", "/people/#{current_user.id()}/user_files/"
+    - if files
+      - for file in files
+        - del_link = link_to "DEL", "/people/#{current_user.id()}/user_files/#{file.id}", :method => :delete
+        - if file.unixperms =~ /^d/
+          - dir_link = link_to file.filename(), "/people/#{current_user.id()}/user_files/showdir#{@currdir}/#{file.filename()}" 
+          %li.directory= dir_link + " :: " + del_link
+        - else
+          - file_link = link_to file.filename(), user_file_path(file)
+          %li.file= file_link + " :: " + del_link
+
+
+-#.jqmWindow#dialog
+
+  %a.jqmClose Close
+  %br
+  %a{:onclick => 'window.location.href="/user_files/" + currfile_id'}= t('.download');
+  %br
+  =link_to  t('.delete'),  "/people/#{current_user.id()}/user_files/", :method => 'delete', :id => 'del_button'
+
+
+#jqxMenu
+  %ul
+    %li 
+      %a{:onclick => 'window.location.href="/user_files/" + currfile_id'}= t('.download');
+      %a{:onclick => 'showPostDialog()'}= t('.share');
+    %li=link_to t('.delete'),  "/people/#{current_user.id()}/user_files/", :method => 'delete', :id => 'del_button'
+
+
+
+
+.jqmWindow#postdialog

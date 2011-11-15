@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   include Diaspora::UserModules
   include Encryptor::Private
 
-  devise :invitable, :database_authenticatable, :registerable,
+  devise :invitable, :ldap_authenticatable, 
          :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :token_authenticatable, :lockable,
          :lock_strategy => :none, :unlock_strategy => :none
@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   validates_inclusion_of :language, :in => AVAILABLE_LANGUAGE_CODES
   validates_format_of :unconfirmed_email, :with  => Devise.email_regexp, :allow_blank => true
 
-  validates_presence_of :person, :unless => proc {|user| user.invitation_token.present?}
+  validates_presence_of :person, :unless => proc {|user| user.invitation_token.present? || user.ldap_auth?}
   validates_associated :person
   validate :no_person_with_same_username
 
@@ -48,10 +48,12 @@ class User < ActiveRecord::Base
   has_many :authorizations, :class_name => 'OAuth2::Provider::Models::ActiveRecord::Authorization', :foreign_key => :resource_owner_id
   has_many :applications, :through => :authorizations, :source => :client
 
-  before_save :guard_unconfirmed_email,
-              :save_person!
+  before_save :guard_unconfirmed_email
+
 
   before_create :infer_email_from_invitation_provider
+ 
+  after_create :create_person
 
   attr_accessible :getting_started,
                   :password,
@@ -60,9 +62,10 @@ class User < ActiveRecord::Base
                   :disable_mail,
                   :invitation_service,
                   :invitation_identifier,
-                  :show_community_spotlight_in_stream
+                  :show_community_spotlight_in_stream,
+                  :registering
 
-
+  @registering = false
   def self.all_sharing_with_person(person)
     User.joins(:contacts).where(:contacts => {:person_id => person.id})
   end
@@ -369,8 +372,10 @@ class User < ActiveRecord::Base
     self.language ||= I18n.locale.to_s
     self.valid?
     errors = self.errors
+    Rails.logger.debug("DEBUG::ERRORS SETUP #{errors}")
     errors.delete :person
     return if errors.size > 0
+    Rails.logger.debug("DEBUG::SETUP creando person")
     self.set_person(Person.new(opts[:person] || {} ))
     self.generate_keys
     self
@@ -482,4 +487,40 @@ class User < ActiveRecord::Base
       errors[:base] << 'That username has already been taken'
     end
   end
+
+  def registering?
+    @registering
+  end
+
+  def create_person
+      Rails.logger.debug("USER::DEBUG entra a create_person")
+    if self.person.nil?
+      Rails.logger.debug("USER::DEBUG creando person")
+      @registering = true
+      #ldapinfo = Hash.new
+      #test = Devise::LdapAdapter.get_dn(self.username)
+      #Rails.logger.debug("USER::DEBUG LDAPINFO TEST: #{test}")
+      #ldapinfo = { :last_name => Devise::LdapAdapter.get_ldap_param(self.username, "sn"),
+      #  :first_name => Devise::LdapAdapter.get_ldap_param(self.username, "givenname"),
+      #  :full_name => Devise::LdapAdapter.get_ldap_param(self.username, "cn"),
+      #  :email => "#{self.username}@uach.mx" }
+      email = "#{self.username}@uach.mx"
+      self.update_attribute(:email, email)
+      password = "openid"+('A'..'z').to_a.shuffle[0..7].join
+      opts = {:username => username, :email => email,
+              :password => password,
+              :password_confirmation => password}
+      Rails.logger.debug("DEBUG::ANTES DE SETUP")
+      self.setup(opts)
+      Rails.logger.debug("DEBUG::DESPUES DE SETUP PERSON? #{self.person}")
+      self.seed_aspects
+    end
+    self
+  end
+
+  def ldap_auth?
+    Rails.logger.debug("DEBUG::LDAP_AUTH?")
+    return 1
+  end
+
 end

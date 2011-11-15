@@ -9,8 +9,10 @@ gem 'thin', '1.2.11', :require => false
 
 # authentication
 
-gem 'devise', '~> 1.3.1'
-gem 'devise_invitable', '0.5.0'
+gem 'devise', '>= 1.4.0'
+#gem 'devise_invitable', '0.5.0'
+gem 'devise_invitable'
+gem "devise_ldap_authenticatable"
 gem 'jwt', "0.1.3"
 gem 'oauth2-provider', '0.0.16'
 gem 'omniauth', '0.2.6'
