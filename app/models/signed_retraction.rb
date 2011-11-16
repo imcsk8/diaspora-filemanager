@@ -72,7 +72,6 @@ class SignedRetraction
   end
 
   def perform receiving_user
-    Rails.logger.debug "Performing retraction for #{target_guid}"
     if reshare = Reshare.where(:author_id => receiving_user.person.id, :root_guid => target_guid).first
       onward_retraction = self.dup
       onward_retraction.sender = receiving_user.person

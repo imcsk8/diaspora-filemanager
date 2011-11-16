@@ -23,13 +23,10 @@ class UserFile < Post
 
   def delete_file
     filepath = "#{Rails.root}/public/uploads/files/#{self.path}/#{self.filename}"
-    Rails.logger.debug "DEBUG :: EN DELETE #{filepath}  :: #{self.unixperms}"
     if self.unixperms =~ /^d/
-      Rails.logger.debug "DEBUG :: DIRECTORIO #{filepath} :: #{self.unixperms}"
       begin
         Dir.rmdir(filepath)
       rescue Exception => e
-      Rails.logger.debug "DEBUG :: DIRECTORIO con contenido"
         raise e
       end
       return 
@@ -58,16 +55,9 @@ class UserFile < Post
     file = super(params)
     file_param = params.delete(:file)
     file_object = FileObject.new
-     Rails.logger.debug "EN MODEL FILE OBJECT: #{file_object}"
-     Rails.logger.debug "EN MODEL USERNAME: #{params[:username]}"
     @username = params[:username]
-     Rails.logger.debug "EN MODEL USERNAME: #{ @username}"
     file.random_string = ActiveSupport::SecureRandom.hex(10)
     if params[:unixperms] !~ /^d/
-      Rails.logger.debug "DEBUG :: ES ARCHIVO "
-     Rails.logger.debug "EN MODEL FILENAME OBJ: #{file_param}"
-     Rails.logger.debug "EN MODEL FILENAME OBJ: #{file_param.original_filename}"
-     Rails.logger.debug "EN MODEL FILENAME ATTR: #{file.filename}"
       file.filename = file_param.original_filename
       file.file_object.user_path = params[:user_path]
       file.file_object.unixperms = params[:unixperms]
@@ -75,16 +65,15 @@ class UserFile < Post
       file.update_remote_path
     else
       newdir = "#{Rails.root}/public/uploads/files/#{params[:user_path]}/#{params[:filename]}"
-      Rails.logger.debug "DEBUG :: ES DIRECTORIO #{newdir}"
       begin 
+        Rails.logger.debug "DEBUG CREANDO DIR"
         Dir.mkdir(newdir, 0755)
+        Rails.logger.debug "DEBUG DIR CREADO"
       rescue Exception => e
         if e.message =~ /No such file/
-          Rails.logger.debug "DEBUG no existe user path llamando a mkdir_p"
           FileUtils.mkdir_p(newdir)
           return
         end
-        Rails.logger.debug "DEBUG ERROR CREANDO DIR ID: #{e}"
         Rails.logger.debug "DEBUG ERROR CREANDO DIR: #{e.message}"
         raise e
       end

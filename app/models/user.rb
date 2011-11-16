@@ -289,6 +289,8 @@ class User < ActiveRecord::Base
   def retract(target, opts={})
     if target.respond_to?(:relayable?) && target.relayable?
       retraction = RelayableRetraction.build(self, target)
+    elsif target.is_a? UserFile
+      retraction = Retraction.for(target)
     elsif target.is_a? Post
       retraction = SignedRetraction.build(self, target)
     else
@@ -372,10 +374,8 @@ class User < ActiveRecord::Base
     self.language ||= I18n.locale.to_s
     self.valid?
     errors = self.errors
-    Rails.logger.debug("DEBUG::ERRORS SETUP #{errors}")
     errors.delete :person
     return if errors.size > 0
-    Rails.logger.debug("DEBUG::SETUP creando person")
     self.set_person(Person.new(opts[:person] || {} ))
     self.generate_keys
     self
@@ -493,9 +493,7 @@ class User < ActiveRecord::Base
   end
 
   def create_person
-      Rails.logger.debug("USER::DEBUG entra a create_person")
     if self.person.nil?
-      Rails.logger.debug("USER::DEBUG creando person")
       @registering = true
       #ldapinfo = Hash.new
       #test = Devise::LdapAdapter.get_dn(self.username)
@@ -510,16 +508,13 @@ class User < ActiveRecord::Base
       opts = {:username => username, :email => email,
               :password => password,
               :password_confirmation => password}
-      Rails.logger.debug("DEBUG::ANTES DE SETUP")
       self.setup(opts)
-      Rails.logger.debug("DEBUG::DESPUES DE SETUP PERSON? #{self.person}")
       self.seed_aspects
     end
     self
   end
 
   def ldap_auth?
-    Rails.logger.debug("DEBUG::LDAP_AUTH?")
     return 1
   end
 

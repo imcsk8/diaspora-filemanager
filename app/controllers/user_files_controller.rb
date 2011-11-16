@@ -38,7 +38,7 @@ class UserFilesController < ApplicationController
       @posts = @person.posts.where("type = 'UserFile' and path = '#{userpath}' ").order("unixperms")
       #@posts = current_user.posts_from(@person).where(:type => 'UserFile').order("unixperms").paginate(:page => params[:page])
 
-      RAILS_DEFAULT_LOGGER.debug "DEBUG:: Entrando a INDEX DE FILES: #{userpath}"
+      Rails.logger.debug "DEBUG:: Entrando a INDEX DE FILES: #{userpath}"
 #      @files = @person.posts.where(:type => ["UserFile"]).order("unixperms").paginate(:page => params[:page])
       render 'people/show'
 
@@ -50,20 +50,20 @@ class UserFilesController < ApplicationController
 
   def create
     @currdir = params[:currdir]
-         RAILS_DEFAULT_LOGGER.debug "DEBUG entrando con CURRDIR: #{params[:currdir]}"
+         Rails.logger.debug "DEBUG entrando con CURRDIR: #{params[:currdir]}"
     begin
       if params.include? 'unixperms'
-         RAILS_DEFAULT_LOGGER.debug "Wrong arguments unixperms #{params[:unixperms]}"
+         Rails.logger.debug "Wrong arguments unixperms #{params[:unixperms]}"
       end
       if create_object
         respond_to do |format|
-	  RAILS_DEFAULT_LOGGER.debug "DEBUG FILE SALVADA #{params[:text]} ";
+	  Rails.logger.debug "DEBUG FILE SALVADA #{params[:text]} ";
           format.json{ render(:layout => false , :json => {"success" => true, "data" => @file}.to_json )}
           format.html{ redirect_to person_user_files_path + "/showdir/#{@currdir}"}
-	  RAILS_DEFAULT_LOGGER.debug "DEBUG DESPUES de JSON";
+	  Rails.logger.debug "DEBUG DESPUES de JSON";
         end
       else
-	RAILS_DEFAULT_LOGGER.debug "DEBUG FILE NO SALVADA #{message}";
+	Rails.logger.debug "DEBUG FILE NO SALVADA #{message}";
         respond_with @file, :location => person_user_files_path, :error => message
       end
 
@@ -87,8 +87,8 @@ class UserFilesController < ApplicationController
   end
 
   def create_object
-    RAILS_DEFAULT_LOGGER.debug "DEBUG Entrando a create object #{params[:file]}"
-    RAILS_DEFAULT_LOGGER.debug "DEBUG ASPECT IDS #{params[:aspect_ids]}"
+    Rails.logger.debug "DEBUG Entrando a create object #{params[:file]}"
+    Rails.logger.debug "DEBUG ASPECT IDS #{params[:aspect_ids]}"
       raise unless params[:aspect_ids]
 
       if params[:aspect_ids] == ["all"]
@@ -105,15 +105,15 @@ class UserFilesController < ApplicationController
       params[:username] = current_user.username
       #we're creating a directory
       if !(params.include? 'unixperms')
-      RAILS_DEFAULT_LOGGER.debug "DEBUG NO ES DIRECTORIO #{params[:unixperms]}"
+      Rails.logger.debug "DEBUG NO ES DIRECTORIO #{params[:unixperms]}"
         params[:user_file] = file_handler(params)
         params[:filename] = params[:user_file].original_filename
         params[:unixperms] = "-r-wr--r--"
       else
-      RAILS_DEFAULT_LOGGER.debug "DEBUG ES DIRECTORIO #{params[:unixperms]}"
+      Rails.logger.debug "DEBUG ES DIRECTORIO #{params[:unixperms]}"
         params[:filename] = params[:user_file]
       end
-      RAILS_DEFAULT_LOGGER.debug "CREATE FILE CON USERNAME #{params[:user_path]}/#{params[:filename]}"
+      Rails.logger.debug "CREATE FILE CON USERNAME #{params[:user_path]}/#{params[:filename]}"
       begin
         @file = current_user.build_post(:user_file, params)
       rescue Exception => e
@@ -135,10 +135,12 @@ class UserFilesController < ApplicationController
 
   def destroy
     file = current_user.posts.where(:id => params[:id]).first
-       RAILS_DEFAULT_LOGGER.debug "DEBUG :: DESTROY #{params[:id]}"
+       Rails.logger.debug "DEBUG :: DESTROY #{params[:id]}"
     begin
     if file
+       Rails.logger.debug "DEBUG :: DESTROY ANTES DE RETRACT"
       current_user.retract(file)
+       Rails.logger.debug "DEBUG :: DESTROY DESPUES DE RETRACT"
 
       respond_to do |format|
         format.json{ render :nothing => true, :status => 204 }
@@ -161,7 +163,8 @@ class UserFilesController < ApplicationController
         message = I18n.t 'user_files.delete_file_error'
       end
       flash[:notice] = message
-       RAILS_DEFAULT_LOGGER.debug "DEBUG :: DESTROY user_files directorio con contenido"
+       Rails.logger.debug "DEBUG :: DESTROY user_files directorio con contenido #{e}"
+       Rails.logger.debug "DEBUG :: DESTROY user_files directorio con contenido INSPECT: #{e.inspect}"
       respond_with file, :location => person_user_files_path, :error => message
     end
 
@@ -170,7 +173,7 @@ class UserFilesController < ApplicationController
 
   def show
    require 'mime/types'
-       RAILS_DEFAULT_LOGGER.debug "DEBUG :: SHOW #{current_user.id} #{params[:id]}"
+       Rails.logger.debug "DEBUG :: SHOW #{current_user.id} #{params[:id]}"
     #if @file = current_user.posts.where(:id => params[:id]).first
     if @file = Post.where(:id => params[:id]).first
       path = @file.object_url.split("/")
@@ -178,7 +181,7 @@ class UserFilesController < ApplicationController
       mime_type = MIME::Types.type_for(filename)
       content_type = mime_type.to_s unless mime_type.nil?
       filepath = "#{Rails.root}" + "/public/uploads/files/" + "#{@file.path}/#{filename}"
-       RAILS_DEFAULT_LOGGER.debug "DEBUG FILENAM #{Rails.root} #{filepath}, MIME: #{content_type}"
+       Rails.logger.debug "DEBUG FILENAM #{Rails.root} #{filepath}, MIME: #{content_type}"
       send_file filepath, :type=>"application/zip", :x_sendfile=>true, :type => content_type
     else
       redirect_to :back
@@ -221,7 +224,7 @@ class UserFilesController < ApplicationController
     begin
       create_object
     rescue Exception => e
-    RAILS_DEFAULT_LOGGER.debug "DEBUG: ERROR CREATEDIR CACHADO #{e.message}"
+    Rails.logger.debug "DEBUG: ERROR CREATEDIR CACHADO #{e.message}"
       message = I18n.t 'user_files.index.create_dir_error'
       flash[:error] = message
       respond_to do |format|
@@ -230,7 +233,7 @@ class UserFilesController < ApplicationController
       end
       return
     end
-    RAILS_DEFAULT_LOGGER.debug "DEBUG: Entrando a newdir con: #{fullpath}"      
+    Rails.logger.debug "DEBUG: Entrando a newdir con: #{fullpath}"      
     respond_to do |format|
       format.json{ render :json => {path: "/people/#{current_user.id}/user_files/showdir#{params[:currdir]}/#{params[:user_file]}", status: 200 }, :status => 200 }
       format.html  {redirect_to people_path}
@@ -276,20 +279,20 @@ class UserFilesController < ApplicationController
     get_user_info()
     @currdir = "/#{params[:name]}" 
     realdir = "#{Rails.root}/public/uploads/files/#{@user_path}/#{params[:name]}"
-    RAILS_DEFAULT_LOGGER.debug "DEBUG Entrando a DIRECTORIO: #{params[:name]} post_type: #{@post_type} REALDIR: #{realdir}"
+    Rails.logger.debug "DEBUG Entrando a DIRECTORIO: #{params[:name]} post_type: #{@post_type} REALDIR: #{realdir}"
     if !File.directory? realdir 
       flash[:error] = I18n.t '.no_such_directory'
       redirect_to person_user_files_path(current_user.person)
       return
     end
     @posts = @person.posts.where("type = 'UserFile' and path = '#{@user_path}/#{params[:name]}' ").order("unixperms").paginate(:page => params[:page])
-    RAILS_DEFAULT_LOGGER.debug "FILES #{@posts}";
+    Rails.logger.debug "FILES #{@posts}";
     render 'people/show'
   end
 
   def filemanager
     get_user_info()
-    RAILS_DEFAULT_LOGGER.debug "DEBUG Entrando a FILEMANAGER: #{params[:dir]} post_type: #{@post_type}"
+    Rails.logger.debug "DEBUG Entrando a FILEMANAGER: #{params[:dir]} post_type: #{@post_type}"
     @currdir = "#{params[:dir]}" 
     if params[:dir] == '/'
       params[:dir] = ''
@@ -298,7 +301,7 @@ class UserFilesController < ApplicationController
     params[:dir].slice!(params[:dir].length - 1)
     params[:dir].slice!(0)
     realdir = "#{Rails.root}/public/uploads/files/#{@user_path}/#{params[:dir]}"
-    RAILS_DEFAULT_LOGGER.debug "DEBUG Entrando a DIRECTORIO: #{params[:dir]} post_type: #{@post_type} REALDIR: #{realdir}"
+    Rails.logger.debug "DEBUG Entrando a DIRECTORIO: #{params[:dir]} post_type: #{@post_type} REALDIR: #{realdir}"
   ##  if !File.directory? realdir 
   #    flash[:error] = I18n.t '.no_such_directory'
   #    redirect_to person_user_files_path(current_user.person)
@@ -310,7 +313,7 @@ class UserFilesController < ApplicationController
     end
 
     @files = @person.posts.where("type = 'UserFile' and path = '#{db_path}' ").order("unixperms")
-    RAILS_DEFAULT_LOGGER.debug "DEBUG DIR: #{params[:dir]}";
+    Rails.logger.debug "DEBUG DIR: #{params[:dir]}";
     render :template => 'user_files/filemanager', :layout => false
   end
 
@@ -353,7 +356,7 @@ class UserFilesController < ApplicationController
   def file_handler(params)
       ######################## dealing with local files #############
       # get file name
-       RAILS_DEFAULT_LOGGER.debug "Entrando a INDEX DE FILES #{params[:file].original_filename}"
+       Rails.logger.debug "Entrando a INDEX DE FILES #{params[:file].original_filename}"
       file_name = params[:file].original_filename
       # get file content type
       att_content_type = (request.content_type.to_s == "") ? "application/octet-stream" : request.content_type.to_s
