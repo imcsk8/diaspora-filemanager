@@ -153,7 +153,7 @@
       = submit_tag t('.upload_file'), :class => "creation"
 
 #toolbar
-  %p#currdir_label= @currdir
+  %p#currdir_label= @currdir != '' ? @currdir : '/'
   .controls
     .new_file.control
       = link_to t('.new_file'), '#', :class => 'button'
