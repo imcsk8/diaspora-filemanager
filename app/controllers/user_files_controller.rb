@@ -143,7 +143,8 @@ class UserFilesController < ApplicationController
        Rails.logger.debug "DEBUG :: DESTROY DESPUES DE RETRACT"
 
       respond_to do |format|
-        format.json{ render :nothing => true, :status => 204 }
+        format.json{ render :json  => {status: 200,
+                            message: "#{I18n.t 'user_files.destroy_notice'}"}, :status => 200 }
         format.html do
           flash[:notice] = I18n.t 'user_files.destroy_notice'
           if StatusMessage.find_by_guid(file.status_message_guid)

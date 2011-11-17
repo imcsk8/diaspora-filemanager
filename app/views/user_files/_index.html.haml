@@ -9,6 +9,7 @@
 - curr_dir_id.slice!(0)
 
 :javascript
+  var count = 1;
   var currfile_id = 0;
   $(document).bind("ready", function(){ 
     $('#content').fileTree({
@@ -16,16 +17,15 @@
         multiFolder: false,
         script: '/people/' +  #{@person.id.to_s()} + '/filemanager'
         }, function(file) {
-          //window.location.href = '/user_files/' + file;
           currfile_id = file
-          $('#del_button').attr('href', '/people/#{current_user.person.id()}/user_files/' + currfile_id);
         });
 
     $('#dialog').jqm();
     $('#postdialog').jqm();
 
-    setTimeout('getDir("#{@currdir}", null); prepareMenu()', 3000);
-
+    //setTimeout('getDir("#{@currdir}", null); prepareMenu()', 3000);
+    //setTimeout('getDir("#{@currdir}", null); prepareActions()', 3000);
+    setTimeout('getDir("#{@currdir}", null);', 3000);
     $('.createdir').editable(function(value, settings){
       createDir(value); 
       return value;
@@ -43,45 +43,58 @@
   });
 
 
-  function prepareMenu() {
-     // Create a jqxMenu
-    /*    $('#jqxMenu').jqxMenu({ width: 250, height: 30 });
-    $('#jqxMenu').css('visibility', 'hidden');
-    $('#jqxMenu').css('display', 'none'); */
+  function fm_download(id){
+         window.location.href="/user_files/" + id;
+  }
+ 
 
-    var contextMenu = $("#jqxMenu").jqxMenu({ width: '120px', height: '140px', autoOpenPopup: false, mode: 'popup', autoCloseInterval: 10000000});
+  function fm_share(id){
+     alert("SHARE: " + id);
+  }  
 
-    $(".jqxWidget").bind('mousedown', function (event) {
-      var rightClick = isRightClick(event);
-      currfile_id = $(this).attr('file_id');
-      isDir = $(this).hasClass('dir'); 
-      if (rightClick) {
-        $('#del_button').attr('href', '/people/#{current_user.person.id()}/user_files/' + currfile_id);
-        var scrollTop = $(window).scrollTop();
-        var scrollLeft = $(window).scrollLeft();
-        contextMenu.jqxMenu('open', parseInt(event.clientX) + 5 + scrollLeft, parseInt(event.clientY) + 5 + scrollTop);
-        return false;
+  function fm_delete(id) {
+    $.ajax({
+      type: "DELETE",
+      url: "/user_files/" + id,
+      cache: false,
+      dataType: 'json',
+      success: function(data){
+        window.location.reload();
+        //alert("Archivo Borrado");
+        //setTimeout('alert("GEDIR");getDir("#{@currdir}", null);', 3000);
       }
-      if(!isDir) {
-        window.location.href="/user_files/" + currfile_id
-      }
-
     });
-    // disable the default browser's context menu.
-    $(document).bind('contextmenu', function (e) {
-      return false;
-    }); 
 
-    function isRightClick(event) {
-      var rightclick;
-      if (!event) var event = window.event;
-        if (event.which) rightclick = (event.which == 3);
-        else
-          if (event.button) rightclick = (event.button == 2);
-            return rightclick;
-    }
   }
 
+ 
+  /*
+  function prepareActions(){
+    $(".download").bind('click', function (event) {
+         window.location.href="/user_files/" + event.target.id;
+    });
+
+    $(".share").bind('click', function (event) {
+         count++;
+         alert("SHARE ID: " + event.target.id + " NO: " + count);
+
+    });
+
+    $(".delete").bind('click', function (event) {
+          $.ajax({
+            type: "DELETE",
+            url: "/user_files/" + event.target.id,
+            cache: false,
+            dataType: 'json',
+            success: function(data){
+              alert("Archivo Borrado");
+              getDir("#{@currdir}", null);
+              //prepareActions();
+            }
+          });
+    });
+
+  } */
 
   function getDir(dir1, dir2){
     dir1 = stripSlashes(dir1);
@@ -93,7 +106,8 @@
     curr_id = curr.replace(/\//g, "_");
     $('#' + curr_id + '_a').trigger('click');
     if(dirpath.length >= 0){
-      setTimeout('getDir(nextdir, curr); prepareMenu()', 3000);
+      //setTimeout('getDir(nextdir, curr); prepareActions()', 3000);
+      setTimeout('getDir(nextdir, curr);', 3000);
     }
   }
 
@@ -198,7 +212,7 @@
   =image_tag('/images/ajax-loader2.gif');
 
 
-#jqxMenu
+-#jqxMenu
   %ul
     %li 
       %a{:onclick => 'window.location.href="/user_files/" + currfile_id'}= t('.download');

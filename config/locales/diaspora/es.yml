@@ -927,13 +927,14 @@ es:
     xrd_fetch_failed: "Hubo un error al recibir el xrd desde la cuenta %{account}"
   welcome: ¡Bienvenid@!
   user_files:
+    download: "Descargar"
+    delete: "Eliminar"
+    share: "Compartir"
     index:
       new_directory: "Nueva Carpeta"
       top_directory: "Inicio"
       create_dir_error: "Este directorio ya existe"
       upload_file: "Cargar Archivo"
-      download: "Descargar"
-      delete: "Eliminar"
       link_facebook: "Compartir en facebook"
       link_twitter: "Compartir en twitter"
       new_file: "Cargar"
