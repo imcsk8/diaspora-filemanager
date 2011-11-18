@@ -14,9 +14,9 @@ class UserFilesController < ApplicationController
     @person = Person.find_by_id(params[:person_id])
     @currdir = "/"
     #aspects = current_user.aspects_from_ids(params[:aspect_ids])
-    #aspect_ids = (session[:a_ids] ? session[:a_ids] : [])
-    #@stream = Stream::Aspect.new(current_user, aspect_ids, :order => sort_order,
-    #                           :max_time => params[:max_time].to_i)
+    aspect_ids = (session[:a_ids] ? session[:a_ids] : [])
+    @stream = Stream::Aspect.new(current_user, aspect_ids, :order => sort_order,
+                               :max_time => params[:max_time].to_i)
     if @person
       @profile = @person.profile
       @contact = current_user.contact_for(@person)

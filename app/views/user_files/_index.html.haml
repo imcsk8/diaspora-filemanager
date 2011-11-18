@@ -49,7 +49,9 @@
  
 
   function fm_share(id){
-     alert("SHARE: " + id);
+     //alert("SHARE: " + id);
+     showPostDialog();
+     $('#status_message_fake_text').val("http://beta.comunidad.uach.mx:3000/user_files/" + id);
   }  
 
   function fm_delete(id) {
@@ -68,34 +70,6 @@
   }
 
  
-  /*
-  function prepareActions(){
-    $(".download").bind('click', function (event) {
-         window.location.href="/user_files/" + event.target.id;
-    });
-
-    $(".share").bind('click', function (event) {
-         count++;
-         alert("SHARE ID: " + event.target.id + " NO: " + count);
-
-    });
-
-    $(".delete").bind('click', function (event) {
-          $.ajax({
-            type: "DELETE",
-            url: "/user_files/" + event.target.id,
-            cache: false,
-            dataType: 'json',
-            success: function(data){
-              alert("Archivo Borrado");
-              getDir("#{@currdir}", null);
-              //prepareActions();
-            }
-          });
-    });
-
-  } */
-
   function getDir(dir1, dir2){
     dir1 = stripSlashes(dir1);
     var dirpath = dir1.split('/');
@@ -156,15 +130,15 @@
 
 .jqmWindow#dialog
   #file_upload
-    = form_tag person_user_files_path , :method => :post, :multipart => true, :id => 'upload_file_form'
-    = file_field_tag 'file'
-    %input{:type => "hidden", :name => "aspect_ids[]", :class => "selected_contacts_link", :value => "all"}
-    %input{:type => "hidden", :id => "currdir", :name => "currdir", :class => "selected_contacts_link", :value => "#{@currdir}"}
-    %input{:type => "hidden", :id => "currdir_fm", :name => "currdir_fm", :class => "selected_contacts_link", :value => "#{@currdir}"}
-    %br
-    .submit_block
-      = link_to t('cancel'), person_path(current_user.person), :class => "button jqmClose"
-      = submit_tag t('.upload_file'), :class => "creation"
+    = form_tag person_user_files_path , :method => :post, :multipart => true, :id => 'upload_file_form' do
+      = file_field_tag 'file'
+      %input{:type => "hidden", :name => "aspect_ids[]", :class => "selected_contacts_link", :value => "all"}
+      %input{:type => "hidden", :id => "currdir", :name => "currdir", :class => "selected_contacts_link", :value => "#{@currdir}"}
+      %input{:type => "hidden", :id => "currdir_fm", :name => "currdir_fm", :class => "selected_contacts_link", :value => "#{@currdir}"}
+      %br
+      .submit_block
+        = link_to t('cancel'), person_path(current_user.person), :class => "button jqmClose"
+        = submit_tag t('.upload_file'), :class => "creation"
 
 #toolbar
   %p#currdir_label= @currdir != '' ? @currdir : '/'
@@ -211,15 +185,6 @@
 #content
   =image_tag('/images/ajax-loader2.gif');
 
-
--#jqxMenu
-  %ul
-    %li 
-      %a{:onclick => 'window.location.href="/user_files/" + currfile_id'}= t('.download');
-      %a{:onclick => 'showPostDialog()'}= t('.share');
-    %li=link_to t('.delete'),  "/people/#{current_user.person.id()}/user_files/", :method => 'delete', :id => 'del_button'
-
-
-
-
 .jqmWindow#postdialog
+  = render 'shared/file_comment', :selected_aspects => @stream.aspect_ids, :aspect_ids => @stream.aspect_ids, :for_all_aspects => true, :aspect => @stream.aspect
+

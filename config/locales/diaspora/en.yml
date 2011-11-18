@@ -760,6 +760,22 @@ en:
         link_twitter: "Compartir en twitter"
         new_file: "Upload"
       destroy_notice: "File Deleted"
+    file_comment:
+      posting: "Posting..."
+      share: "Share"
+      post_a_message_to: "Post a message to %{aspect}"
+      make_public: "make public"
+      all: "all"
+      upload_photos: "Upload photos"
+      all_contacts: "all contacts"
+      share_with: "share with"
+      whats_on_your_mind: "What's on your mind?"
+      publishing_to: "publishing to: "
+      discard_post: "Discard post"
+      new_user_prefill:
+        hello: "Hey everyone, I'm #%{new_user_tag}. "
+        i_like: "I'm interested in %{tags}. "
+        invited_by: "Thanks for the invite, "
     publisher:
       posting: "Posting..."
       share: "Share"

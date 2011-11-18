@@ -74,6 +74,7 @@ javascripts:
     - public/javascripts/widgets/jqueryFileTree/jqueryFileTree.js
     - public/javascripts/widgets/jqwidgets/jqxcore.js
     - public/javascripts/widgets/jqwidgets/jqxmenu.js
+    - public/javascripts/publisher.js
   inbox:
     - public/javascripts/vendor/jquery.autoSuggest.custom.js
     - public/javascripts/inbox.js

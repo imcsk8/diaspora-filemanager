@@ -741,6 +741,38 @@ es:
       share: "Comparte"
       title: "Configurar los servicios conectados"
       visibility_dropdown: "Usa este menú desplegable para cambiar la visibilidad de tu publicación. (Sugerimos hacerlo público la primera vez.)"
+    file_comment: 
+      all: "todo"
+      all_contacts: "todos los contactos"
+      discard_post: "Descartar publicación"
+      make_public: "hacer público"
+      new_user_prefill: 
+        hello: "Hola a tod@s, I'm #%{new_user_tag}."
+        i_like: "Tengo interés en %{tags}."
+        invited_by: "Gracias por la invitación, "
+      post_a_message_to: "Publicar un mensaje en %{aspect}"
+      posting: Publicando...
+      publishing_to: "publicar en:"
+      share: "Compartir"
+      share_with: "compartir con"
+      upload_photos: "Subir fotos"
+      whats_on_your_mind: "¿Qué andas pensando?"
+    reshare: 
+      reshare: "Publicar en..."
+    stream_element: 
+      connect_to_comment: "Conecta con esta persona para comentar en su publicación"
+      currently_unavailable: "comentarios actualmente no disponibles"
+      dislike: "No me gusta"
+      hide_and_mute: "Ignorar la publicación"
+      ignore_user: "Ignorar a %{name}"
+      ignore_user_description: "¿Ignorar y quitar a esa persona de todos los aspectos?"
+      like: "Me gusta"
+      shared_with: "Compartir con: %{aspect_names}"
+      unlike: "No me gusta"
+      via: "vía %{link}"
+      viewable_to_anyone: "Esta publicación podrá verla cualquiera en internet"
+
+
 
     publisher: 
       all: "todo"
