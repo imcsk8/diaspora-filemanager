@@ -21,7 +21,7 @@
         -#in the future we can download directories but not now action_download = content_tag(:span, "download ", :class => "fm_action download", :id =>  "#{id_elem}_a")
         - action_share = content_tag(:span, "", :title => t('user_files.share'), :class => "fm_action share", :id => "#{id_elem}_share", :onClick => "fm_share('#{file.id}')")
         - action_delete = content_tag(:span, "", :title => t('user_files.delete'), :class => "fm_action delete", :id => "#{id_elem}_delete", :onClick => "fm_delete('#{file.id}')" )
-        - dir_link = link_to file.filename(), "#", :rel => dirpath, :file_id => "#{file.id()}", :id => "#{id_elem}_a", :class => "dir jqxWidget"
+        - dir_link = link_to file.filename(), "#", :id => "#{file.id()}", :rel => dirpath, :file_id => "#{file.id()}", :id => "#{id_elem}_a", :class => "dir jqxWidget"
         - fileman_elem = dir_link + action_share + action_delete
         %li{ :class => classes, :id => "#{id_elem}"}= fileman_elem
       - else
@@ -29,7 +29,7 @@
         - myfilename =~ /.*\.(.+)$/
         - ext = $1
         - classes = "file ext_#{ext}"
-        - file_link = link_to myfilename, "#", :rel => "#{file.id()}", :file_id => "#{file.id()}", :class => "jqxWidget"
+        - file_link = link_to myfilename, "#", :rel => "#{file.id()}", :id => "#{file.id()}", :file_id => "#{file.id()}", :class => "jqxWidget"
         -# test = "#{file_link} TES"
         - action_download = content_tag(:span, "", :title => t('user_files.download'), :class => "fm_action download", :id => "#{file.id}_download", :rel => "#{file.id}", :onClick => "fm_download('#{file.id}')")
         - action_share = content_tag(:span, "", :title => t('user_files.share'), :class => "fm_action share", :id => "#{file.id}_share", :rel => "#{file.id}", :onClick => "fm_share('#{file.id}')")

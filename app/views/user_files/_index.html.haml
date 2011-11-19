@@ -22,6 +22,7 @@
 
     $('#dialog').jqm();
     $('#postdialog').jqm();
+    prepareCloseDialog();
 
     //setTimeout('getDir("#{@currdir}", null); prepareMenu()', 3000);
     //setTimeout('getDir("#{@currdir}", null); prepareActions()', 3000);
@@ -39,7 +40,6 @@
      });
 
 
-
   });
 
 
@@ -49,9 +49,11 @@
  
 
   function fm_share(id){
-     //alert("SHARE: " + id);
      showPostDialog();
-     $('#status_message_fake_text').val("http://beta.comunidad.uach.mx:3000/user_files/" + id);
+     file_link = "[" + $("#" + id).text() + "]" + "(http://" + window.location.host + "/user_files/" +  id + ")";
+     $('#status_message_fake_text').val(file_link);
+     $('#status_message_text').val(file_link);
+     Publisher.open();
   }  
 
   function fm_delete(id) {
@@ -67,6 +69,18 @@
       }
     });
 
+  }
+
+
+  /* close share dialog */
+  function prepareCloseDialog() {
+    $("#hide_publisher_fm").bind("click", function(){
+      $.each(Publisher.form().find("textarea"), function(idx, element){
+         $(element).val("");
+      });
+       Publisher.close();
+       hidePostDialog();
+    });
   }
 
  
@@ -127,6 +141,11 @@
   function showPostDialog(){
     $('#postdialog').jqmShow();
   }
+
+  function hidePostDialog(){
+    $('#postdialog').jqmHide();
+  }
+
 
 .jqmWindow#dialog
   #file_upload

@@ -54,7 +54,7 @@
       %p
         %params
           #publisher_textarea_wrapper
-            = link_to( image_tag('deletelabel.png'), "#", :id => "hide_publisher", :title => t('.discard_post'))
+            = link_to( image_tag('deletelabel.png'), "#", :id => "hide_publisher_fm", :title => t('.discard_post'))
             %ul#photodropzone
             = status.text_area :fake_text, :rows => 2, :value => h(publisher_formatted_text), :tabindex => 1, :placeholder => t('.whats_on_your_mind'),
               :title => "1. #{t('shared.public_explain.share')}", 'data-content' => t('shared.public_explain.new_user_welcome_message')
