@@ -510,6 +510,7 @@ class User < ActiveRecord::Base
               :password_confirmation => password}
       self.setup(opts)
       self.seed_aspects
+      self.save
     end
     self
   end
