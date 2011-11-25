@@ -66,9 +66,7 @@ class UserFile < Post
     else
       newdir = "#{Rails.root}/public/uploads/files/#{params[:user_path]}/#{params[:filename]}"
       begin 
-        Rails.logger.debug "DEBUG CREANDO DIR"
         Dir.mkdir(newdir, 0755)
-        Rails.logger.debug "DEBUG DIR CREADO"
       rescue Exception => e
         if e.message =~ /No such file/
           FileUtils.mkdir_p(newdir)

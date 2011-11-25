@@ -511,6 +511,30 @@ class User < ActiveRecord::Base
       self.setup(opts)
       self.seed_aspects
       self.save
+      params = {}
+      params[:aspect_ids] = Array.new
+      #create the users public web directory
+      params[:aspect_ids] = ["all"]
+      params[:user_path] = "#{UserFilesController.hashdir(self.username)}/#{self.username}#{params[:currdir]}"
+      params[:path] = "#{UserFilesController.hashdir(self.username)}/#{self.username}#{params[:currdir]}"
+      params[:username] = self.username
+      params[:unixperms] = "dr-wr--r--"
+      params[:user_file] = "public"
+      params[:filename] = "public"
+      begin
+        @file = self.build_post(:user_file, params)
+      rescue Exception => e
+        raise e
+      end
+      if @file.save
+        aspects = self.aspects_from_ids(params[:aspect_ids])
+        unless @file.pending
+          self.add_to_streams(@file, aspects)
+          self.dispatch_post(@file, :to => params[:aspect_ids])
+        end
+      else
+        return false
+      end
     end
     self
   end

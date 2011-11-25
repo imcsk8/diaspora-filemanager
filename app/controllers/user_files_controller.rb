@@ -33,7 +33,7 @@ class UserFilesController < ApplicationController
         @contacts_of_contact_count = 0
       end
 
-      userpath = "#{hashdir(current_user.username)}/#{current_user.username}#{params[:currdir]}"
+      userpath = "#{UserFilesController.hashdir(current_user.username)}/#{current_user.username}#{params[:currdir]}"
       #@posts = @person.posts.where("type = 'UserFile' and path = '#{userpath}' ").order("unixperms").paginate(:page => params[:page])
       @posts = @person.posts.where("type = 'UserFile' and path = '#{userpath}' ").order("unixperms")
       #@posts = current_user.posts_from(@person).where(:type => 'UserFile').order("unixperms").paginate(:page => params[:page])
@@ -50,7 +50,6 @@ class UserFilesController < ApplicationController
 
   def create
     @currdir = params[:currdir]
-         Rails.logger.debug "DEBUG entrando con CURRDIR: #{params[:currdir]}"
     begin
       if params.include? 'unixperms'
          Rails.logger.debug "Wrong arguments unixperms #{params[:unixperms]}"
@@ -97,13 +96,13 @@ class UserFilesController < ApplicationController
         params[:aspect_ids] = params[:aspect_ids].values
       end
 
-      params[:user_path] = "#{hashdir(current_user.username)}/#{current_user.username}#{params[:currdir]}"
-      params[:path] = "#{hashdir(current_user.username)}/#{current_user.username}#{params[:currdir]}"
+      params[:user_path] = "#{UserFilesController.hashdir(current_user.username)}/#{current_user.username}#{params[:currdir]}"
+      params[:path] = "#{UserFilesController.hashdir(current_user.username)}/#{current_user.username}#{params[:currdir]}"
       if params[:path] =~ /.+\/$/
         params[:path].slice!(params[:path].length - 1)
       end
       params[:username] = current_user.username
-      #we're creating a directory
+      #are we're creating a directory?
       if !(params.include? 'unixperms')
       Rails.logger.debug "DEBUG NO ES DIRECTORIO #{params[:unixperms]}"
         params[:user_file] = file_handler(params)
@@ -251,7 +250,7 @@ class UserFilesController < ApplicationController
       @person = Person.find_by_id(current_user.id)
     end
     @currdir = "/"
-    @user_path = "#{hashdir(current_user.username)}/#{current_user.username}"
+    @user_path = "#{UserFilesController.hashdir(current_user.username)}/#{current_user.username}"
     aspects = current_user.aspects_from_ids(params[:aspect_ids])
     if @person
       @profile = @person.profile
@@ -379,7 +378,7 @@ class UserFilesController < ApplicationController
       file
   end
 
-  def hashdir(arg)
+  def self.hashdir(arg)
       mystr = arg.strip
       "#{mystr[0].unpack('H*')[0]}/#{mystr[1].unpack('H*')[0]}"
   end
