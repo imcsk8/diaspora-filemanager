@@ -186,7 +186,7 @@ class User < ActiveRecord::Base
   def build_post(class_name, opts = {})
     opts[:author] = self.person
     opts[:diaspora_handle] = opts[:author].diaspora_handle
-
+    
     model_class = class_name.to_s.camelize.constantize
     model_class.diaspora_initialize(opts)
   end
@@ -523,15 +523,19 @@ class User < ActiveRecord::Base
       params[:filename] = "public"
       begin
         @file = self.build_post(:user_file, params)
+        Rails.logger.debug("DEBUG:: FILE: #{@file}")
       rescue Exception => e
+        Rails.logger.debug("Cant' create post for public folder!! #{e.message}") 
         raise e
       end
+      Rails.logger.debug("DEBUG:: FILE: #{@file}")
       if @file.save
         aspects = self.aspects_from_ids(params[:aspect_ids])
         unless @file.pending
           self.add_to_streams(@file, aspects)
           self.dispatch_post(@file, :to => params[:aspect_ids])
         end
+        File.symlink("#{Rails.root}/public/uploads/files/#{params[:path]}/public", "#{Rails.root}/public_html/#{self.username}")
       else
         return false
       end

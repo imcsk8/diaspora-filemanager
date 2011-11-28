@@ -70,7 +70,7 @@ class UserFile < Post
       rescue Exception => e
         if e.message =~ /No such file/
           FileUtils.mkdir_p(newdir)
-          return
+          return file
         end
         Rails.logger.debug "DEBUG ERROR CREANDO DIR: #{e.message}"
         raise e

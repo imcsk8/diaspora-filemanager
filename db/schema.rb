@@ -303,10 +303,10 @@ ActiveRecord::Schema.define(:version => 20111101202137) do
     t.string   "status_message_guid"
     t.integer  "likes_count",                         :default => 0
     t.integer  "comments_count",                      :default => 0
-    t.integer  "o_embed_cache_id"
     t.string   "filename"
     t.string   "path"
     t.string   "unixperms"
+    t.integer  "o_embed_cache_id"
   end
 
   add_index "posts", ["author_id", "root_guid"], :name => "index_posts_on_author_id_and_root_guid", :unique => true
