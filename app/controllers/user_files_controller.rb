@@ -56,13 +56,11 @@ class UserFilesController < ApplicationController
       end
       if create_object
         respond_to do |format|
-	  Rails.logger.debug "DEBUG FILE SALVADA #{params[:text]} ";
           format.json{ render(:layout => false , :json => {"success" => true, "data" => @file}.to_json )}
           format.html{ redirect_to person_user_files_path + "/showdir/#{@currdir}"}
-	  Rails.logger.debug "DEBUG DESPUES de JSON";
         end
       else
-	Rails.logger.debug "DEBUG FILE NO SALVADA #{message}";
+	      Rails.logger.debug "DEBUG::problem saving file #{message}";
         respond_with @file, :location => person_user_files_path, :error => message
       end
 
@@ -109,13 +107,14 @@ class UserFilesController < ApplicationController
         params[:filename] = params[:user_file].original_filename
         params[:unixperms] = "-r-wr--r--"
       else
-      Rails.logger.debug "DEBUG ES DIRECTORIO #{params[:unixperms]}"
+        Rails.logger.debug "DEBUG it's a directory #{params[:unixperms]}"
         params[:filename] = params[:user_file]
       end
-      Rails.logger.debug "CREATE FILE CON USERNAME #{params[:user_path]}/#{params[:filename]}"
+      Rails.logger.debug "DEBUG::Creating file #{params[:user_path]}/#{params[:filename]}"
       begin
         @file = current_user.build_post(:user_file, params)
       rescue Exception => e
+        Rails.logger.debug "DEBUG::Error creating file #{e.message}"
         raise e
       end
 
@@ -252,6 +251,9 @@ class UserFilesController < ApplicationController
     @currdir = "/"
     @user_path = "#{UserFilesController.hashdir(current_user.username)}/#{current_user.username}"
     aspects = current_user.aspects_from_ids(params[:aspect_ids])
+    aspect_ids = (session[:a_ids] ? session[:a_ids] : [])
+    @stream = Stream::Aspect.new(current_user, aspect_ids, :order => sort_order,
+                               :max_time => params[:max_time].to_i)
     if @person
       @profile = @person.profile
       @contact = current_user.contact_for(@person)

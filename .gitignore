@@ -19,7 +19,7 @@ vendor/bundle/*
 vendor/cache/*
 config/database.yml
 config/ldap.yml
-config/locales/diaspora/es_UACH.yml
+config/locales/diaspora/es-UACH.yml
 .rvmrc_custom
 
 #Mailing list stuff
