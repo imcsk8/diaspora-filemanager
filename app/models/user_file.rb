@@ -72,6 +72,10 @@ class UserFile < Post
           FileUtils.mkdir_p(newdir)
           return file
         end
+        if e.message =~ /File exists/
+          return 
+        end
+
         Rails.logger.debug "DEBUG ERROR CREANDO DIR: #{e.message}"
         raise e
       end

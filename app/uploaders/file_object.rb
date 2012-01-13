@@ -16,7 +16,7 @@ class FileObject < CarrierWave::Uploader::Base
   end
 
   def extension_white_list
-    %w(jpg jpeg png gif doc xls ppt pdf exe mp3 mpeg mp4 avi ogg wmf csv flv jar zip gz bz2 rar arj docx pptx xslx svg)
+    %w(jpg jpeg png gif doc xls ppt pdf exe mp3 mpeg mp4 avi ogg wmf csv flv jar zip gz bz2 rar arj docx pptx xslx svg html htm)
   end
 
   def filename

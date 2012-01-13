@@ -57,7 +57,7 @@ class UserFilesController < ApplicationController
       if create_object
         respond_to do |format|
           format.json{ render(:layout => false , :json => {"success" => true, "data" => @file}.to_json )}
-          format.html{ redirect_to person_user_files_path + "/showdir/#{@currdir}"}
+          format.html{ redirect_to person_user_files_path + "/showdir#{@currdir}"}
         end
       else
 	      Rails.logger.debug "DEBUG::problem saving file #{message}";
