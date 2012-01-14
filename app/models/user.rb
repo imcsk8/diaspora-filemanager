@@ -529,16 +529,18 @@ class User < ActiveRecord::Base
         raise e
       end
       Rails.logger.debug("DEBUG:: FILE: #{@file}")
-      if @file.save
-        aspects = self.aspects_from_ids(params[:aspect_ids])
-        unless @file.pending
-          self.add_to_streams(@file, aspects)
-          self.dispatch_post(@file, :to => params[:aspect_ids])
-        end
-        File.symlink("#{Rails.root}/public/uploads/files/#{params[:path]}/public", "#{Rails.root}/public_html/#{self.username}")
-      else
-        return false
-      end
+      if !@file.is_a?(NilClass)
+      	if @file.save
+       	 aspects = self.aspects_from_ids(params[:aspect_ids])
+       	 unless @file.pending
+       	   self.add_to_streams(@file, aspects)
+       	   self.dispatch_post(@file, :to => params[:aspect_ids])
+       	 end
+       	 File.symlink("#{Rails.root}/public/uploads/files/#{params[:path]}/public", "#{Rails.root}/public_html/#{self.username}")
+     	 else
+       	 return false
+      	end
+      end 
     end
     self
   end
